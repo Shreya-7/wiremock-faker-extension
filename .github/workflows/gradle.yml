@@ -2,7 +2,8 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - "add-ci-workflow"
   pull_request:
     branches: [ "main" ]
 
