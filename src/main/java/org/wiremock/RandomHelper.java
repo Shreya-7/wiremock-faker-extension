@@ -9,9 +9,14 @@ import net.datafaker.Faker;
  */
 public class RandomHelper extends HandlebarsHelper<Object> {
 
+  private final Faker faker;
+
+  public RandomHelper() {
+    faker = new Faker();
+  }
+
   @Override
   public Object apply(Object context, Options options) {
-    Faker faker = new Faker();
     try {
       // Used the `expression` method instead of `resolve` as the
       // resolve method is not able to resolve nested references in the yml files. For example, in

@@ -1,21 +1,21 @@
 package org.wiremock;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 
-import com.github.jknack.handlebars.Helper;
-import com.github.jknack.handlebars.Options;
 import java.io.IOException;
-import java.util.ArrayList;
-import org.junit.jupiter.api.Assertions;
+import java.lang.reflect.Field;
+import java.util.Random;
+
+import com.github.tomakehurst.wiremock.extension.responsetemplating.helpers.HandlebarsHelperTestBase;
+import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-public class RandomHelperTest {
+public class RandomHelperTest extends HandlebarsHelperTestBase {
   RandomHelper helper;
-  protected static final String FAIL_GRACEFULLY_MSG =
-      "Handlebars helper should fail gracefully and show the issue directly in the response.";
 
   @BeforeEach
   public void init() {
@@ -23,25 +23,19 @@ public class RandomHelperTest {
   }
 
   @Test
-  public void rendersAMeaningfulErrorWhenExpressionIsInvalid() {
-    try {
-      assertThat(
-          (String) renderHelperValue(helper, "something really random"),
-          is("[ERROR: Unable to evaluate the expression something really random]"));
-    } catch (final IOException e) {
-      Assertions.fail(FAIL_GRACEFULLY_MSG);
-    }
+  public void rendersAMeaningfulErrorWhenExpressionIsInvalid() throws IOException {
+    testHelperError(helper, "something really random", null,
+            is("[ERROR: Unable to evaluate the expression something really random]"));
   }
 
-  @Test
-  public void returnsRandomValue() throws Exception {
-    assertThat(renderHelperValue(helper, "Name.firstName"), is(any(String.class)));
-  }
+  @ParameterizedTest
+  @CsvSource(value = {"123456789, Name.firstName, Herb", "123456789, Name.lastName, Hauck"})
+  public void returnsRandomValue(int seed, String expression, String expected) throws Exception {
+    Field newFaker = helper.getClass().getDeclaredField("faker");
+    newFaker.setAccessible(true);
+    newFaker.set(helper, new Faker(new Random(seed)));
 
-  private <R, C> R renderHelperValue(Helper<C> helper, C content) throws IOException {
-    return (R)
-        helper.apply(
-            content,
-            new Options(null, null, null, null, null, null, null, null, new ArrayList<String>(0)));
+    String actual = renderHelperValue(helper, expression);
+    assertThat(actual, is(expected));
   }
 }

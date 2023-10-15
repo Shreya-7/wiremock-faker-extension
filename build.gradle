@@ -94,6 +94,11 @@ dependencies {
   testImplementation "org.hamcrest:hamcrest-core:2.2"
   testImplementation "org.hamcrest:hamcrest-library:2.2"
   testImplementation 'org.awaitility:awaitility:4.2.0'
+  testImplementation("org.wiremock:wiremock:$versions.wiremock") {
+    artifact {
+      classifier = 'tests'
+    }
+  }
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
