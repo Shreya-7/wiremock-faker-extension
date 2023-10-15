@@ -3,11 +3,10 @@ package org.wiremock;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+import com.github.tomakehurst.wiremock.extension.responsetemplating.helpers.HandlebarsHelperTestBase;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Random;
-
-import com.github.tomakehurst.wiremock.extension.responsetemplating.helpers.HandlebarsHelperTestBase;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +23,11 @@ public class RandomHelperTest extends HandlebarsHelperTestBase {
 
   @Test
   public void rendersAMeaningfulErrorWhenExpressionIsInvalid() throws IOException {
-    testHelperError(helper, "something really random", null,
-            is("[ERROR: Unable to evaluate the expression something really random]"));
+    testHelperError(
+        helper,
+        "something really random",
+        null,
+        is("[ERROR: Unable to evaluate the expression something really random]"));
   }
 
   @ParameterizedTest

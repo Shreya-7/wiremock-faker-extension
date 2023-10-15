@@ -17,14 +17,14 @@ public class RandomExtensionTest {
 
   @RegisterExtension
   public WireMockExtension wm =
-          WireMockExtension.newInstance()
-                  .options(
-                          wireMockConfig()
-                                  .dynamicPort()
-                                  .templatingEnabled(true)
-                                  .globalTemplating(true)
-                                  .extensions(RandomExtension.class))
-                  .build();
+      WireMockExtension.newInstance()
+          .options(
+              wireMockConfig()
+                  .dynamicPort()
+                  .templatingEnabled(true)
+                  .globalTemplating(true)
+                  .extensions(RandomExtension.class))
+          .build();
 
   WireMockTestClient client;
 
